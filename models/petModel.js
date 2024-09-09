@@ -58,6 +58,7 @@ function deleteOneById(id) {
 }
 
 if (require.main === module) {
+  // Add pet
   let result = addOne({
     name: "Buddy",
     species: "Dog",
@@ -65,9 +66,10 @@ if (require.main === module) {
     color: "Brown",
     weight: 20,
   });
-  console.assert(result.length === 1, "Test 1 Failed: Should add one pet");
-  console.log(result);
-  // Test 2: Add another valid pet
+  console.log("result", result);
+  console.assert(typeof result === "object", "Result should be an object");
+
+  // Add another pet
   result = addOne({
     name: "Mittens",
     species: "Cat",
@@ -75,18 +77,48 @@ if (require.main === module) {
     color: "Black",
     weight: 10,
   });
-  console.assert(result.length === 2, "Test 2 Failed: Should add another pet");
   console.log(result);
+  console.assert(typeof result === "object", "Result should be an object");
 
-  console.log("getAll called:", getAll());
+  // Get all pets
+  const allPets = getAll();
+  console.log("getAll called:", allPets);
+  console.assert(Array.isArray(allPets), "getAll should return an array");
+  console.assert(
+    allPets.length === 2,
+    "getAll should return an array of length 2"
+  );
 
-  console.log("findById called:", findById(1));
+  // Find pet by ID
+  const pet = findById(1);
+  console.log("findById called:", pet);
+  console.assert(typeof pet === "object", "findById should return an object");
 
-  console.log("updateOne called:", updateOneById(1, { age: 4, weight: 22 }));
-  console.log("findById called after item updated:", findById(1));
+  // Update pet by ID
+  const updatedPet = updateOneById(1, { age: 4, weight: 22 });
+  console.log("updateOneById called:", updatedPet);
+  console.assert(
+    typeof updatedPet === "object",
+    "updateOneById should return an object"
+  );
 
-  console.log("deleteOneById called:", deleteOneById(1));
-  console.log("findById called after item deleted:", findById(1));
+  // Verify update
+  const updatedPetCheck = findById(1);
+  console.log("findById called after item updated:", updatedPetCheck);
+  console.assert(
+    updatedPetCheck.age === 4 && updatedPetCheck.weight === 22,
+    "Pet should be updated"
+  );
+
+  // Delete pet by ID
+  const deletedPet = deleteOneById(1);
+  console.log("deleteOneById called:", deletedPet);
+  console.assert(deletedPet === true, "deleteOneById should return true");
+
+  // Verify deletion
+  const deletedPetCheck = findById(1);
+  console.log("findById called after item deleted:", deletedPetCheck);
+  console.assert(deletedPetCheck === false, "Pet should be deleted");
 }
 
 const Pet = {
